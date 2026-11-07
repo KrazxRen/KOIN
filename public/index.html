@@ -1,47 +1,360 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f1117"><link rel="manifest" href="/manifest.json">
-<link rel="icon" href="/icon-192.png"><link rel="apple-touch-icon" href="/icon-192.png"><title>KOIN</title>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
- <style>
-:root{--bg:#0f1117;--card:#1a1d27;--ac:#f5b932;--tx:#eceff4;--mut:#8b90a0;--bd:#262a38;--red:#ff6b6b}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px 'Poppins',system-ui,sans-serif}
-[hidden]{display:none!important}
-  input,button{font-family:inherit}
-#app,#auth{max-width:480px;margin:auto;min-height:100dvh}
-#auth{padding:calc(env(safe-area-inset-top,0px) + 60px) 20px 20px}
-.logo{text-align:center;font-size:44px;letter-spacing:8px;color:var(--ac);margin:0 0 24px}
-header{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:5;background:var(--bg);border-bottom:1px solid var(--bd);
- padding:calc(env(safe-area-inset-top,0px) + 14px) 0 14px;text-align:center;font-weight:800;letter-spacing:3px}
-main{display:flex;flex-direction:column;min-height:100dvh;padding:calc(env(safe-area-inset-top,0px) + 74px) 16px calc(env(safe-area-inset-bottom,0px) + 88px)}
-.tab{flex:1;display:flex;flex-direction:column;gap:12px}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
-nav button{flex:1;background:none;border:0;color:var(--mut);padding:10px 0;font-size:12px}
-nav button span{display:block;font-size:22px}nav button.on{color:var(--ac)}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px}
-input{width:100%;padding:13px;margin:6px 0;border-radius:10px;border:1px solid var(--bd);background:#12141c;color:var(--tx);font-size:16px}
-.btn{width:100%;padding:14px;border:0;border-radius:12px;background:var(--ac);color:#1b1500;font-size:16px;font-weight:700;margin:5px 0}
-.btn.alt{background:#2a2e3f;color:var(--tx)}.btn:disabled{background:#2a2e3f;color:#6b7080}
-.btn.opt{text-align:left;padding:18px;font-size:17px;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
-.bal{text-align:center;padding:28px 16px}.bal small{color:var(--mut)}.amt{font-size:46px;font-weight:800;color:var(--ac)}.amt small{font-size:16px}
-.note{text-align:center;color:var(--mut);font-size:13px;margin:2px 0}.err{color:var(--red);font-size:14px;min-height:18px;margin:4px 0}
-.chk{display:flex;gap:8px;align-items:center;color:var(--mut);margin:6px 0}.chk input{width:auto;margin:0}
-.back,.link{background:none;border:0;color:var(--mut);font-size:15px;padding:6px 0;text-align:left}.link{text-align:center;margin-top:4px}
-video{width:100%;border-radius:14px;background:#000;aspect-ratio:1}
-#qr{background:#fff;border-radius:14px;padding:16px;display:inline-block}#qr img{display:block;width:240px;height:240px}
-ul{list-style:none;padding:0;margin:0}li{padding:12px 4px;border-bottom:1px solid var(--bd);font-size:14px;line-height:1.4}li::before{content:"• "}li.note::before{content:""}
-.prof{text-align:center}.pfp{width:84px;height:84px;border-radius:50%;background:#2a2e3f;margin:0 auto 10px;display:grid;place-items:center}
-.pfp svg{width:48px;fill:var(--mut)}.prof h2{margin:4px 0}.pwrow{display:flex;justify-content:center;align-items:center;gap:10px;color:var(--mut)}
-.ico{background:none;border:0;font-size:20px;padding:4px}
-.dev{margin-top:auto;text-align:center;color:var(--mut);font-size:13px}
-#modal{position:fixed;inset:0;background:#000a;display:grid;place-items:center;padding:20px;z-index:20}#modal .card{width:100%;max-width:400px}
-#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translate(-50%,20px);background:#2a2e3f;padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:30;max-width:90%;text-align:center;font-size:14px}
-#toast.on{opacity:1;transform:translate(-50%,0)}
-</style></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f1117">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <title>KOIN</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --ac: #f5b932;
+  --tx: #eceff4;
+  --mut: #8b90a0;
+  --bd: #262a38;
+  --red: #ff6b6b;
+}
 
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--tx);
+  font: 16px 'Poppins',system-ui,sans-serif;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+input, button {
+  font-family: inherit;
+}
+
+#app, #auth {
+  max-width: 480px;
+  margin: auto;
+  min-height: 100dvh;
+}
+
+#auth {
+  padding: calc(env(safe-area-inset-top,0px) + 60px) 20px 20px;
+}
+
+.logo {
+  text-align: center;
+  font-size: 44px;
+  letter-spacing: 8px;
+  color: var(--ac);
+  margin: 0 0 24px;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  z-index: 5;
+  background: var(--bg);
+  border-bottom: 1px solid var(--bd);
+  padding: calc(env(safe-area-inset-top,0px) + 14px) 0 14px;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top,0px) + 74px) 16px calc(env(safe-area-inset-bottom,0px) + 88px);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  background: var(--card);
+  border-top: 1px solid var(--bd);
+  padding-bottom: env(safe-area-inset-bottom,0px);
+}
+
+nav button {
+  flex: 1;
+  background: none;
+  border: 0;
+  color: var(--mut);
+  padding: 10px 0;
+  font-size: 12px;
+}
+
+nav button span {
+  display: block;
+  font-size: 22px;
+}
+
+nav button.on {
+  color: var(--ac);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 6px 0;
+  border-radius: 10px;
+  border: 1px solid var(--bd);
+  background: #12141c;
+  color: var(--tx);
+  font-size: 16px;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--ac);
+  color: #1b1500;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 5px 0;
+}
+
+.btn.alt {
+  background: #2a2e3f;
+  color: var(--tx);
+}
+
+.btn:disabled {
+  background: #2a2e3f;
+  color: #6b7080;
+}
+
+.btn.opt {
+  text-align: left;
+  padding: 18px;
+  font-size: 17px;
+  background: var(--card);
+  color: var(--tx);
+  border: 1px solid var(--bd);
+}
+
+.bal {
+  text-align: center;
+  padding: 28px 16px;
+}
+
+.bal small {
+  color: var(--mut);
+}
+
+.amt {
+  font-size: 46px;
+  font-weight: 800;
+  color: var(--ac);
+}
+
+.amt small {
+  font-size: 16px;
+}
+
+.note {
+  text-align: center;
+  color: var(--mut);
+  font-size: 13px;
+  margin: 2px 0;
+}
+
+.err {
+  color: var(--red);
+  font-size: 14px;
+  min-height: 18px;
+  margin: 4px 0;
+}
+
+.chk {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--mut);
+  margin: 6px 0;
+}
+
+.chk input {
+  width: auto;
+  margin: 0;
+}
+
+.back, .link {
+  background: none;
+  border: 0;
+  color: var(--mut);
+  font-size: 15px;
+  padding: 6px 0;
+  text-align: left;
+}
+
+.link {
+  text-align: center;
+  margin-top: 4px;
+}
+
+video {
+  width: 100%;
+  border-radius: 14px;
+  background: #000;
+  aspect-ratio: 1;
+}
+
+#qr {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  display: inline-block;
+}
+
+#qr img {
+  display: block;
+  width: 240px;
+  height: 240px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--bd);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+li::before {
+  content: "• ";
+}
+
+li.note::before {
+  content: "";
+}
+
+.prof {
+  text-align: center;
+}
+
+.pfp {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: #2a2e3f;
+  margin: 0 auto 10px;
+  display: grid;
+  place-items: center;
+}
+
+.pfp svg {
+  width: 48px;
+  fill: var(--mut);
+}
+
+.prof h2 {
+  margin: 4px 0;
+}
+
+.pwrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--mut);
+}
+
+.ico {
+  background: none;
+  border: 0;
+  font-size: 20px;
+  padding: 4px;
+}
+
+.dev {
+  margin-top: auto;
+  text-align: center;
+  color: var(--mut);
+  font-size: 13px;
+}
+
+#modal {
+  position: fixed;
+  inset: 0;
+  background: #000a;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 20;
+}
+
+#modal .card {
+  width: 100%;
+  max-width: 400px;
+}
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom,0px) + 90px);
+  transform: translate(-50%,20px);
+  background: #2a2e3f;
+  padding: 11px 18px;
+  border-radius: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s;
+  z-index: 30;
+  max-width: 90%;
+  text-align: center;
+  font-size: 14px;
+}
+
+#toast.on {
+  opacity: 1;
+  transform: translate(-50%,0);
+}
+  </style>
+</head>
+<body>
 <div id="auth" hidden>
  <h1 class="logo">KOIN</h1>
  <div class="card">
@@ -114,109 +427,332 @@ ul{list-style:none;padding:0;margin:0}li{padding:12px 4px;border-bottom:1px soli
 <div id="toast"></div>
 
 <script>
-const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s),fmt=c=>(c/100).toFixed(2);
-const VER='1.0.0',DEV='Krazx';
-let tok=localStorage.tok||sessionStorage.tok||null,S=null,pw=null,showPw=false,stream=null,scanning=false,to=null,tt;
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const fmt = c => (c / 100).toFixed(2);
+const VER = '1.0.0';
+const DEV = 'Krazx';
+let tok = localStorage.tok || sessionStorage.tok || null;
+let S = null;
+let pw = null;
+let showPw = false;
+let stream = null;
+let scanning = false;
+let to = null;
+let tt;
 
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)}
-async function api(p,b){
-  const r=await fetch('/api/'+p,{method:b?'POST':'GET',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:b?JSON.stringify(b):undefined});
-  const d=await r.json().catch(()=>({}));
-  if(r.status===401&&tok){out();throw Error('Session expired, please log in')}
-  if(!r.ok)throw Error(d.error||'Something went wrong');return d}
+function toast(m) {
+  const t = $('#toast');
+  t.textContent = m;
+  t.classList.add('on');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('on'), 2800);
+}
 
-async function enter(kind){
-  try{const u=$('#u').value.trim(),p=$('#p').value,rm=$('#rm').checked;
-   const d=await api(kind,{username:u,password:p,remember:rm});
-   tok=d.token;(rm?localStorage:sessionStorage).tok=tok;pw=p;$('#aerr').textContent='';await boot()}
-  catch(e){$('#aerr').textContent=e.message}}
-function out(srv){
-  if(srv&&tok)fetch('/api/logout',{method:'POST',headers:{Authorization:'Bearer '+tok}}).catch(()=>{});
-  localStorage.removeItem('tok');sessionStorage.removeItem('tok');tok=S=pw=null;showPw=false;stopScan();
-  $('#app').hidden=true;$('#auth').hidden=false;$('#p').value=''}
-async function boot(){await refresh();$('#auth').hidden=true;$('#app').hidden=false;$('#ver').textContent=VER;$('#dev').textContent=DEV;tab('home')}
-async function refresh(){S=await api('me');render()}
-function render(){
-  $('#bal').textContent=fmt(S.balance);$('#earn').disabled=S.earned;
-  $('#note').textContent=S.earned?'Already earned today, come back tomorrow':'Earn KOINS once every day';
-  $('#uname').textContent='@'+S.username;$('#pwv').textContent=showPw&&pw!==null?pw:'*******'}
+async function api(p, b) {
+  const r = await fetch('/api/' + p, {
+    method: b ? 'POST' : 'GET',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok },
+    body: b ? JSON.stringify(b) : undefined
+  });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401 && tok) {
+    out();
+    throw Error('Session expired, please log in');
+  }
+  if (!r.ok) throw Error(d.error || 'Something went wrong');
+  return d;
+}
 
-function tab(n){
-  $$('.tab').forEach(e=>e.hidden=e.id!==n);$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));
-  n==='transfer'?sub('t-menu'):stopScan();refresh().catch(()=>{})}
-$$('nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
-function sub(id){stopScan();$('#manual').hidden=false;['t-menu','t-send','t-recv','t-hist'].forEach(x=>$('#'+x).hidden=x!==id);$('#sendForm').hidden=true}
+// ---- Login / logout ----
+async function enter(kind) {
+  try {
+    const u = $('#u').value.trim();
+    const p = $('#p').value;
+    const rm = $('#rm').checked;
+    const d = await api(kind, { username: u, password: p, remember: rm });
+    tok = d.token;
+    (rm ? localStorage : sessionStorage).tok = tok;
+    pw = p;
+    $('#aerr').textContent = '';
+    await boot();
+  } catch (e) {
+    $('#aerr').textContent = e.message;
+  }
+}
 
-$('#earn').onclick=async()=>{try{const d=await api('earn',{});toast('+'+fmt(d.reward)+' KOINS earned!')}catch(e){toast(e.message)}refresh().catch(()=>{})};
+function out(srv) {
+  if (srv && tok) {
+    fetch('/api/logout', { method: 'POST', headers: { Authorization: 'Bearer ' + tok } }).catch(() => {});
+  }
+  localStorage.removeItem('tok');
+  sessionStorage.removeItem('tok');
+  tok = S = pw = null;
+  showPw = false;
+  stopScan();
+  $('#app').hidden = true;
+  $('#auth').hidden = false;
+  $('#p').value = '';
+}
+
+async function boot() {
+  await refresh();
+  $('#auth').hidden = true;
+  $('#app').hidden = false;
+  $('#ver').textContent = VER;
+  $('#dev').textContent = DEV;
+  tab('home');
+}
+
+async function refresh() {
+  S = await api('me');
+  render();
+}
+
+function render() {
+  $('#bal').textContent = fmt(S.balance);
+  $('#earn').disabled = S.earned;
+  $('#note').textContent = S.earned ? 'Already earned today, come back tomorrow' : 'Earn KOINS once every day';
+  $('#uname').textContent = '@' + S.username;
+  $('#pwv').textContent = showPw && pw !== null ? pw : '*******';
+}
+
+// ---- Navigation ----
+function tab(n) {
+  $$('.tab').forEach(e => {
+    e.hidden = e.id !== n;
+  });
+  $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === n));
+  if (n === 'transfer') sub('t-menu');
+  else stopScan();
+  refresh().catch(() => {});
+}
+
+$$('nav button').forEach(b => {
+  b.onclick = () => tab(b.dataset.t);
+});
+
+function sub(id) {
+  stopScan();
+  $('#manual').hidden = false;
+  ['t-menu', 't-send', 't-recv', 't-hist'].forEach(x => {
+    $('#' + x).hidden = x !== id;
+  });
+  $('#sendForm').hidden = true;
+}
+
+// ---- Earn ----
+$('#earn').onclick = async () => {
+  try {
+    const d = await api('earn', {});
+    toast('+' + fmt(d.reward) + ' KOINS earned!');
+  } catch (e) {
+    toast(e.message);
+  }
+  refresh().catch(() => {});
+};
 
 // ---- Send (scan) ----
-function sendOpen(){sub('t-send');startScan()}
-async function startScan(){
-  try{
-   stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
-   const v=$('#vid');v.hidden=false;v.srcObject=stream;await v.play();scanning=true;loop(v)}
-  catch(e){stopScan();toast(e.name==='NotAllowedError'?'Allow camera access in your browser settings':'Camera problem: '+(e.message||e.name))}}
-function stopScan(){scanning=false;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('#vid').hidden=true}
-function loop(v){
-  let bd=null;try{if('BarcodeDetector' in window)bd=new BarcodeDetector({formats:['qr_code']})}catch{}
-  const c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true});let n=0,busy=false,warned=false;
-  if(!bd&&!window.jsQR)toast('Scanner still loading. Try again, or paste the code below');
-  (async function t(){
-   if(!scanning)return;
-   if(v.videoWidth&&!busy&&++n%2===0){
-    busy=true;let data=null;
-    try{
-     if(bd){const r=await bd.detect(v);if(r.length)data=r[0].rawValue}
-     else if(window.jsQR){const s=Math.min(1,960/v.videoWidth);c.width=v.videoWidth*s;c.height=v.videoHeight*s;x.drawImage(v,0,0,c.width,c.height);
-      const k=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'dontInvert'});if(k)data=k.data}
-    }catch{}
-    busy=false;
-    if(data&&data.startsWith('KOIN:')){found(data.slice(5));return}
-    if(data&&!warned){warned=true;toast('That is not a KOIN code')}}
-   requestAnimationFrame(t)})()}
-async function found(pid){
-  stopScan();
-  try{const d=await api('lookup?pid='+encodeURIComponent(pid));to=pid;$('#to').textContent='@'+d.username;$('#sendForm').hidden=false}
-  catch(e){toast(e.message);startScan()}}
-$('#sendBtn').onclick=async()=>{
-  try{const a=$('#amt').value.trim().replace(',','.');
-   await api('send',{pid:to,amount:a,password:$('#spw').value});
-   toast('Sent '+(+a).toFixed(2)+' KOINS to '+$('#to').textContent);$('#amt').value=$('#spw').value='';sub('t-menu');refresh().catch(()=>{})}
-  catch(e){toast(e.message)}};
+function sendOpen() {
+  sub('t-send');
+  startScan();
+}
 
-$('#mgo').onclick=()=>{const v=$('#mcode').value.trim().replace(/^KOIN:/i,'');if(v){$('#manual').hidden=true;found(v)}};
+async function startScan() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    });
+    const v = $('#vid');
+    v.hidden = false;
+    v.srcObject = stream;
+    await v.play();
+    scanning = true;
+    loop(v);
+  } catch (e) {
+    stopScan();
+    toast(e.name === 'NotAllowedError' ? 'Allow camera access in your browser settings' : 'Camera problem: ' + (e.message || e.name));
+  }
+}
+
+function stopScan() {
+  scanning = false;
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  stream = null;
+  $('#vid').hidden = true;
+}
+
+function loop(v) {
+  let bd = null;
+  try {
+    if ('BarcodeDetector' in window) bd = new BarcodeDetector({ formats: ['qr_code'] });
+  } catch {}
+  const c = document.createElement('canvas');
+  const x = c.getContext('2d', { willReadFrequently: true });
+  let n = 0;
+  let busy = false;
+  let warned = false;
+  if (!bd && !window.jsQR) toast('Scanner still loading. Try again, or paste the code below');
+
+  (async function t() {
+    if (!scanning) return;
+    if (v.videoWidth && !busy && ++n % 2 === 0) {
+      busy = true;
+      let data = null;
+      try {
+        if (bd) {
+          const r = await bd.detect(v);
+          if (r.length) data = r[0].rawValue;
+        } else if (window.jsQR) {
+          const s = Math.min(1, 960 / v.videoWidth);
+          c.width = v.videoWidth * s;
+          c.height = v.videoHeight * s;
+          x.drawImage(v, 0, 0, c.width, c.height);
+          const k = jsQR(x.getImageData(0, 0, c.width, c.height).data, c.width, c.height, { inversionAttempts: 'dontInvert' });
+          if (k) data = k.data;
+        }
+      } catch {}
+      busy = false;
+      if (data && data.startsWith('KOIN:')) {
+        found(data.slice(5));
+        return;
+      }
+      if (data && !warned) {
+        warned = true;
+        toast('That is not a KOIN code');
+      }
+    }
+    requestAnimationFrame(t);
+  })();
+}
+
+async function found(pid) {
+  stopScan();
+  try {
+    const d = await api('lookup?pid=' + encodeURIComponent(pid));
+    to = pid;
+    $('#to').textContent = '@' + d.username;
+    $('#sendForm').hidden = false;
+  } catch (e) {
+    toast(e.message);
+    startScan();
+  }
+}
+
+$('#sendBtn').onclick = async () => {
+  try {
+    const a = $('#amt').value.trim().replace(',', '.');
+    await api('send', { pid: to, amount: a, password: $('#spw').value });
+    toast('Sent ' + (+a).toFixed(2) + ' KOINS to ' + $('#to').textContent);
+    $('#amt').value = '';
+    $('#spw').value = '';
+    sub('t-menu');
+    refresh().catch(() => {});
+  } catch (e) {
+    toast(e.message);
+  }
+};
+
+$('#mgo').onclick = () => {
+  const v = $('#mcode').value.trim().replace(/^KOIN:/i, '');
+  if (v) {
+    $('#manual').hidden = true;
+    found(v);
+  }
+};
+
 // ---- Receive ----
-function recvOpen(){
-  if(!window.qrcode)return toast('Still loading, try again in a moment');
-  sub('t-recv');const q=qrcode(0,'M');q.addData('KOIN:'+S.pid);q.make();
-  $('#qr').innerHTML=q.createImgTag(8,4);$('#rname').textContent='@'+S.username;$('#rcode').textContent='KOIN:'+S.pid}
+function recvOpen() {
+  if (!window.qrcode) return toast('Still loading, try again in a moment');
+  sub('t-recv');
+  const q = qrcode(0, 'M');
+  q.addData('KOIN:' + S.pid);
+  q.make();
+  $('#qr').innerHTML = q.createImgTag(8, 4);
+  $('#rname').textContent = '@' + S.username;
+  $('#rcode').textContent = 'KOIN:' + S.pid;
+}
 
 // ---- History ----
-async function histOpen(){
-  sub('t-hist');const ul=$('#hist');ul.innerHTML='';
-  try{const l=await api('history');
-   if(!l.length)ul.innerHTML='<li class="note">No transactions yet</li>';
-   const z=n=>String(n).padStart(2,'0');
-   l.forEach(x=>{const d=new Date(x.at),li=document.createElement('li');
-    li.textContent=`[${z(d.getDate())}-${z(d.getMonth()+1)}-${d.getFullYear()}] (${z(d.getHours())}:${z(d.getMinutes())}) : ${x.sent?'sent':'received'} ${fmt(x.amount)} KOINS ${x.sent?'to':'from'} @${x.who}`;
-    ul.append(li)})}
-  catch(e){toast(e.message)}}
+async function histOpen() {
+  sub('t-hist');
+  const ul = $('#hist');
+  ul.innerHTML = '';
+  try {
+    const l = await api('history');
+    if (!l.length) ul.innerHTML = '<li class="note">No transactions yet</li>';
+    const z = n => String(n).padStart(2, '0');
+    l.forEach(x => {
+      const d = new Date(x.at);
+      const li = document.createElement('li');
+      const date = `[${z(d.getDate())}-${z(d.getMonth() + 1)}-${d.getFullYear()}]`;
+      const time = `(${z(d.getHours())}:${z(d.getMinutes())})`;
+      const verb = x.sent ? 'sent' : 'received';
+      const prep = x.sent ? 'to' : 'from';
+      li.textContent = `${date} ${time} : ${verb} ${fmt(x.amount)} KOINS ${prep} @${x.who}`;
+      ul.append(li);
+    });
+  } catch (e) {
+    toast(e.message);
+  }
+}
 
 // ---- Me ----
-$('#eye').onclick=()=>{
-  if(pw===null)return toast('For security, your password can only be shown right after you log in');
-  showPw=!showPw;render()};
-function ask(title,fields,go){
-  $('#mt').textContent=title;$('#mf').innerHTML='';$('#merr').textContent='';
-  fields.forEach(([ph,type])=>{const i=document.createElement('input');i.placeholder=ph;i.type=type||'text';i.autocomplete='off';i.autocapitalize='none';$('#mf').append(i)});
-  $('#modal').hidden=false;
-  $('#ok').onclick=async()=>{try{await go([...$('#mf').children].map(i=>i.value));$('#modal').hidden=true}catch(e){$('#merr').textContent=e.message}}}
-$('#chU').onclick=()=>ask('Change username',[['New username'],['Current password','password']],async([n,p])=>{
-  await api('username',{username:n.trim(),password:p});await refresh();toast('Username changed')});
-$('#chP').onclick=()=>ask('Change password',[['Current password','password'],['New password','password']],async([o,n])=>{
-  await api('password',{password:o,newPassword:n});pw=n;render();toast('Password changed')});
-$('#lo').onclick=()=>out(true);
+$('#eye').onclick = () => {
+  if (pw === null) return toast('For security, your password can only be shown right after you log in');
+  showPw = !showPw;
+  render();
+};
 
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
-tok?boot().catch(()=>{$('#auth').hidden=false}):$('#auth').hidden=false;
-</script></body></html>
+function ask(title, fields, go) {
+  $('#mt').textContent = title;
+  $('#mf').innerHTML = '';
+  $('#merr').textContent = '';
+  fields.forEach(([ph, type]) => {
+    const i = document.createElement('input');
+    i.placeholder = ph;
+    i.type = type || 'text';
+    i.autocomplete = 'off';
+    i.autocapitalize = 'none';
+    $('#mf').append(i);
+  });
+  $('#modal').hidden = false;
+  $('#ok').onclick = async () => {
+    try {
+      await go([...$('#mf').children].map(i => i.value));
+      $('#modal').hidden = true;
+    } catch (e) {
+      $('#merr').textContent = e.message;
+    }
+  };
+}
+
+$('#chU').onclick = () => ask('Change username', [['New username'], ['Current password', 'password']], async ([n, p]) => {
+  await api('username', { username: n.trim(), password: p });
+  await refresh();
+  toast('Username changed');
+});
+
+$('#chP').onclick = () => ask('Change password', [['Current password', 'password'], ['New password', 'password']], async ([o, n]) => {
+  await api('password', { password: o, newPassword: n });
+  pw = n;
+  render();
+  toast('Password changed');
+});
+
+$('#lo').onclick = () => out(true);
+
+// ---- Start ----
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+if (tok) {
+  boot().catch(() => {
+    $('#auth').hidden = false;
+  });
+} else {
+  $('#auth').hidden = false;
+}
+</script>
+</body>
+</html>
