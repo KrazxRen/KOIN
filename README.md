@@ -1,7 +1,4 @@
-> [!IMPORTANT]
-> CURRENTLY UNDER CODE REPLACEMENT
-> 
-> MAY BE UNSTABLE 
+![logo](public/icon-512.png)
 
 # KOIN
 > A proof-of-activity based digital currency
