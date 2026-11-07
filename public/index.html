@@ -801,7 +801,28 @@ li.note::before {
   opacity: 1;
   transform: translate(-50%, 0);
 }
+    
+/* Transfer menu spacing */
 
+#t-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#t-menu .btn.opt {
+  min-height: 76px;
+  padding: 20px 22px;
+  gap: 16px;
+  border-radius: 18px;
+  font-size: 15px;
+}
+
+#t-menu .btn.opt svg {
+  width: 24px;
+  height: 24px;
+}
+    
 /* DESKTOP */
 
 @media (min-width: 481px) {
