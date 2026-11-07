@@ -543,9 +543,18 @@ li.note::before {
 
   <section id="transfer" class="tab" hidden>
    <div id="t-menu">
-    <button class="btn opt" onclick="sendOpen()">📤 &nbsp;Send</button>
-    <button class="btn opt" onclick="recvOpen()">📥 &nbsp;Receive</button>
-    <button class="btn opt" onclick="histOpen()">🧾 &nbsp;Transaction history</button>
+    <button class="btn opt" onclick="sendOpen()">
+      <i data-lucide="upload"></i>
+      <span>Send KOINS</span>
+    </button>
+    <button class="btn opt" onclick="recvOpen()">
+      <i data-lucide="download"></i>
+      <span>Receive KOINS</span>
+    </button>
+    <button class="btn opt" onclick="histOpen()">
+      <i data-lucide="rotate-ccw-clock"></i>
+      <span>Transaction History</span>
+    </button>
    </div>
    <div id="t-send" hidden>
     <button class="back" onclick="sub('t-menu')">← Back</button>
@@ -559,11 +568,15 @@ li.note::before {
     </div>
    </div>
    <div id="t-recv" hidden>
-    <button class="back" onclick="sub('t-menu')">← Back</button>
+    <button class="back" onclick="sub('t-menu')">
+      <i data-lucide="arrow-left"></i>
+    </button>
     <div class="card" style="text-align:center"><div id="qr"></div><p id="rname"><b></b></p><p id="rcode" class="note" style="word-break:break-all;user-select:all"></p><p class="note">Let the sender scan this code</p></div>
    </div>
    <div id="t-hist" hidden>
-    <button class="back" onclick="sub('t-menu')">← Back</button>
+    <button class="back" onclick="sub('t-menu')">
+      <i data-lucide="arrow-left"></i>
+    </button>
     <ul id="hist"></ul>
    </div>
   </section>
@@ -572,7 +585,9 @@ li.note::before {
    <div class="card prof">
     <div class="pfp"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg></div>
     <h2 id="uname"></h2>
-    <div class="pwrow"><span id="pwv">*******</span><button id="eye" class="ico" aria-label="Show password">👁</button></div>
+    <div class="pwrow"><span id="pwv">*******</span><button id="eye" class="ico" aria-label="Show password">
+      <i data-lucide="eye"></i>
+    </button></div>
    </div>
    <button class="btn alt" id="chU">Change username</button>
    <button class="btn alt" id="chP">Change password</button>
@@ -628,8 +643,8 @@ $('#themeToggle').onclick = () => {
 };
 
 const fmt = c => (c / 100).toFixed(2);
-const VER = '1.0.2';
-const DEV = 'Krazx';
+const VER = '2.0.0';
+const DEV = 'KrazxRen';
 let tok = localStorage.tok || sessionStorage.tok || null;
 let S = null;
 let pw = null;
