@@ -99,6 +99,7 @@ Pushing a change to GitHub redeploys automatically. Data lives in Neon, so redep
 
 ## Changelog
 
+- **2.0.0**: ui redesign [human code update 1]
 - **1.0.2**: pretty html
 - **1.0.1**: changed to Poppins font
 - **1.0.0**: first release.
