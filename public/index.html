@@ -176,7 +176,7 @@ nav {
   border-top: 2px solid var(--bd);
   padding: 5px 0 env(safe-area-inset-bottom, 0px);
 }
-
+    
 nav button {
   flex: 1;
   background: none;
@@ -277,6 +277,8 @@ input::placeholder {
   color: var(--tx);
   border: 2px solid var(--bd);
   box-shadow: 4px 4px 0 var(--bd);
+  display: flex;
+  align-items: center;
 }
 
 .bal {
@@ -557,7 +559,9 @@ li.note::before {
     </button>
    </div>
    <div id="t-send" hidden>
-    <button class="back" onclick="sub('t-menu')">← Back</button>
+    <button class="back" onclick="sub('t-menu')">
+      <i data-lucide="arrow-left"></i>
+    </button>
     <video id="vid" playsinline muted hidden></video>
     <div class="card" id="manual"><input id="mcode" placeholder="Or paste a KOIN code" autocapitalize="none" spellcheck="false"><button class="btn alt" id="mgo">Use code</button></div>
     <div id="sendForm" class="card" hidden>
