@@ -1122,6 +1122,7 @@ $('#earn').onclick = async () => {
 
 // ---- Send (scan) ----
 function sendOpen() {
+  tab('transfer');
   sub('t-send');
   startScan();
 }
@@ -1232,11 +1233,17 @@ $('#mgo').onclick = () => {
 
 // ---- Receive ----
 function recvOpen() {
-  if (!window.qrcode) return toast('Still loading, try again in a moment');
+  if (!window.qrcode) {
+    return toast('Still loading, try again in a moment');
+  }
+
+  tab('transfer');
   sub('t-recv');
+
   const q = qrcode(0, 'M');
   q.addData('KOIN:' + S.pid);
   q.make();
+
   $('#qr').innerHTML = q.createImgTag(8, 4);
   $('#rname').textContent = '@' + S.username;
   $('#rcode').textContent = 'KOIN:' + S.pid;
