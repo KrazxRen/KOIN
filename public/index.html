@@ -7,6 +7,7 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-192.png">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <title>KOIN</title>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
@@ -69,6 +70,20 @@ button {
   cursor: pointer;
 }
 
+[data-lucide] {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+nav button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+    
 #app, #auth {
   max-width: 480px;
   margin: auto;
@@ -564,9 +579,18 @@ li.note::before {
   </section>
  </main>
  <nav>
-  <button data-t="home" class="on"><span>🏠</span>Home</button>
-  <button data-t="transfer"><span>🔁</span>Transfer</button>
-  <button data-t="prof"><span>👤</span>Me</button>
+  <button data-t="home" class="on">
+    <i data-lucide="house"></i>
+    <span>Home</span>
+  </button>
+  <button data-t="transfer">
+    <i data-lucide="arrow-left-right"></i>
+    <span>Transfer</span>
+  </button>
+  <button data-t="prof">
+    <i data-lucide="user-round"></i>
+    <span>Me</span>
+  </button>
  </nav>
 </div>
 
@@ -638,7 +662,12 @@ async function api(p, b) {
   if (!r.ok) throw Error(d.error || 'Something went wrong');
   return d;
 }
+  
+function renderIcons() {
+  lucide.createIcons();
+}
 
+renderIcons();
 // ---- Login / logout ----
 async function enter(kind) {
   try {
@@ -928,6 +957,7 @@ if (tok) {
 } else {
   $('#auth').hidden = false;
 }
+  
 </script>
 </body>
 </html>
