@@ -1,8 +1,7 @@
 # KOIN
+> A proof-of-activity based digital currency
 
-A mobile-first, installable web app (PWA) where players earn coins every day and send them to each other with QR codes.
-
-**Current version:** 1.0.0 (shown in the app's developer card; set by `VER` in `public/index.html`)
+KOIN is a mobile-first, installable web app (PWA) where players earn coins every day and send them to each other with QR codes.
 
 ## Features
 
