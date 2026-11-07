@@ -100,3 +100,11 @@ Pushing a change to GitHub redeploys automatically. Data lives in Neon, so redep
 - **1.0.2**: pretty html
 - **1.0.1**: changed to Poppins font
 - **1.0.0**: first release.
+
+---
+
+Copyright (c) 2026 Krazx Ren
+
+All rights reserved.
+
+Viewing this repository does not grant permission to copy, modify, distribute, or use this source code.
