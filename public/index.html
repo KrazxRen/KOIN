@@ -29,7 +29,7 @@ input{width:100%;padding:13px;margin:6px 0;border-radius:10px;border:1px solid v
 .chk{display:flex;gap:8px;align-items:center;color:var(--mut);margin:6px 0}.chk input{width:auto;margin:0}
 .back,.link{background:none;border:0;color:var(--mut);font-size:15px;padding:6px 0;text-align:left}.link{text-align:center;margin-top:4px}
 video{width:100%;border-radius:14px;background:#000;aspect-ratio:1}
-#qr{background:#fff;border-radius:14px;padding:10px;display:inline-block}#qr img{display:block;width:240px;height:240px}
+#qr{background:#fff;border-radius:14px;padding:16px;display:inline-block}#qr img{display:block;width:240px;height:240px}
 ul{list-style:none;padding:0;margin:0}li{padding:12px 4px;border-bottom:1px solid var(--bd);font-size:14px;line-height:1.4}li::before{content:"• "}li.note::before{content:""}
 .prof{text-align:center}.pfp{width:84px;height:84px;border-radius:50%;background:#2a2e3f;margin:0 auto 10px;display:grid;place-items:center}
 .pfp svg{width:48px;fill:var(--mut)}.prof h2{margin:4px 0}.pwrow{display:flex;justify-content:center;align-items:center;gap:10px;color:var(--mut)}
@@ -70,6 +70,7 @@ ul{list-style:none;padding:0;margin:0}li{padding:12px 4px;border-bottom:1px soli
    <div id="t-send" hidden>
     <button class="back" onclick="sub('t-menu')">← Back</button>
     <video id="vid" playsinline muted hidden></video>
+    <div class="card" id="manual"><input id="mcode" placeholder="Or paste a KOIN code" autocapitalize="none" spellcheck="false"><button class="btn alt" id="mgo">Use code</button></div>
     <div id="sendForm" class="card" hidden>
      <p>Send to <b id="to"></b></p>
      <input id="amt" inputmode="decimal" placeholder="Amount (e.g. 2.00)">
@@ -79,7 +80,7 @@ ul{list-style:none;padding:0;margin:0}li{padding:12px 4px;border-bottom:1px soli
    </div>
    <div id="t-recv" hidden>
     <button class="back" onclick="sub('t-menu')">← Back</button>
-    <div class="card" style="text-align:center"><div id="qr"></div><p id="rname"><b></b></p><p class="note">Let the sender scan this code</p></div>
+    <div class="card" style="text-align:center"><div id="qr"></div><p id="rname"><b></b></p><p id="rcode" class="note" style="word-break:break-all;user-select:all"></p><p class="note">Let the sender scan this code</p></div>
    </div>
    <div id="t-hist" hidden>
     <button class="back" onclick="sub('t-menu')">← Back</button>
@@ -142,25 +143,34 @@ function tab(n){
   $$('.tab').forEach(e=>e.hidden=e.id!==n);$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));
   n==='transfer'?sub('t-menu'):stopScan();refresh().catch(()=>{})}
 $$('nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
-function sub(id){stopScan();['t-menu','t-send','t-recv','t-hist'].forEach(x=>$('#'+x).hidden=x!==id);$('#sendForm').hidden=true}
+function sub(id){stopScan();$('#manual').hidden=false;['t-menu','t-send','t-recv','t-hist'].forEach(x=>$('#'+x).hidden=x!==id);$('#sendForm').hidden=true}
 
 $('#earn').onclick=async()=>{try{const d=await api('earn',{});toast('+'+fmt(d.reward)+' KOINS earned!')}catch(e){toast(e.message)}refresh().catch(()=>{})};
 
 // ---- Send (scan) ----
 function sendOpen(){sub('t-send');startScan()}
 async function startScan(){
-  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-   const v=$('#vid');v.srcObject=stream;await v.play();v.hidden=false;scanning=true;loop(v)}
-  catch{toast('Camera access is needed to scan')}}
+  try{
+   stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+   const v=$('#vid');v.hidden=false;v.srcObject=stream;await v.play();scanning=true;loop(v)}
+  catch(e){stopScan();toast(e.name==='NotAllowedError'?'Allow camera access in your browser settings':'Camera problem: '+(e.message||e.name))}}
 function stopScan(){scanning=false;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('#vid').hidden=true}
 function loop(v){
-  const c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true});let n=0;
-  (function t(){
+  let bd=null;try{if('BarcodeDetector' in window)bd=new BarcodeDetector({formats:['qr_code']})}catch{}
+  const c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true});let n=0,busy=false,warned=false;
+  if(!bd&&!window.jsQR)toast('Scanner still loading. Try again, or paste the code below');
+  (async function t(){
    if(!scanning)return;
-   if(v.videoWidth&&++n%3===0&&window.jsQR){
-    const s=Math.min(1,480/v.videoWidth);c.width=v.videoWidth*s;c.height=v.videoHeight*s;x.drawImage(v,0,0,c.width,c.height);
-    const k=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height);
-    if(k&&k.data.startsWith('KOIN:')){found(k.data.slice(5));return}}
+   if(v.videoWidth&&!busy&&++n%2===0){
+    busy=true;let data=null;
+    try{
+     if(bd){const r=await bd.detect(v);if(r.length)data=r[0].rawValue}
+     else if(window.jsQR){const s=Math.min(1,960/v.videoWidth);c.width=v.videoWidth*s;c.height=v.videoHeight*s;x.drawImage(v,0,0,c.width,c.height);
+      const k=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'dontInvert'});if(k)data=k.data}
+    }catch{}
+    busy=false;
+    if(data&&data.startsWith('KOIN:')){found(data.slice(5));return}
+    if(data&&!warned){warned=true;toast('That is not a KOIN code')}}
    requestAnimationFrame(t)})()}
 async function found(pid){
   stopScan();
@@ -172,11 +182,12 @@ $('#sendBtn').onclick=async()=>{
    toast('Sent '+(+a).toFixed(2)+' KOINS to '+$('#to').textContent);$('#amt').value=$('#spw').value='';sub('t-menu');refresh().catch(()=>{})}
   catch(e){toast(e.message)}};
 
+$('#mgo').onclick=()=>{const v=$('#mcode').value.trim().replace(/^KOIN:/i,'');if(v){$('#manual').hidden=true;found(v)}};
 // ---- Receive ----
 function recvOpen(){
   if(!window.qrcode)return toast('Still loading, try again in a moment');
   sub('t-recv');const q=qrcode(0,'M');q.addData('KOIN:'+S.pid);q.make();
-  $('#qr').innerHTML=q.createImgTag(8,2);$('#rname').textContent='@'+S.username}
+  $('#qr').innerHTML=q.createImgTag(8,4);$('#rname').textContent='@'+S.username;$('#rcode').textContent='KOIN:'+S.pid}
 
 // ---- History ----
 async function histOpen(){
@@ -207,4 +218,3 @@ $('#lo').onclick=()=>out(true);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
 tok?boot().catch(()=>{$('#auth').hidden=false}):$('#auth').hidden=false;
 </script></body></html>
-  
