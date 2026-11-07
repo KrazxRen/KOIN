@@ -13,7 +13,7 @@ KOIN is a mobile-first, installable web app (PWA) where players earn coins every
   - **Send:** scan the receiver's QR code, enter an amount and your password
   - **Receive:** show your personal QR code
   - **Transaction history:** newest first, e.g. `[07-11-2026] (14:32) : sent 2.00 KOINS to @lisa_na`
-- **Me:** profile card, change username, change password, log out, developer card
+- **Profile:** profile card, change username, change password, log out, developer card
 - **Installable:** works as a home-screen app on Android and iOS
 
 ## Tech stack
@@ -29,13 +29,13 @@ KOIN is a mobile-first, installable web app (PWA) where players earn coins every
 ## Project structure
 
 ```
-server.js            API + database logic
+server.js
 package.json
 public/
-  index.html         the whole app (UI, styles, scripts)
-  sw.js              service worker (offline shell, always-fresh pages)
-  manifest.json      makes the app installable
-  icon-192.png       app icons
+  index.html 
+  sw.js         
+  manifest.json    
+  icon-192.png     
   icon-512.png
 ```
 
@@ -66,15 +66,15 @@ Then open http://localhost:3000. The tables are created automatically on first s
    - Environment variable: `DATABASE_URL`
 4. Open the `onrender.com` link on a phone and choose **Install app**.
 
-Pushing a change to GitHub redeploys automatically. Data lives in Neon, so redeploys never erase accounts or coins.
+Pushing a change to GitHub redeploys automatically.
 
 ## How it works
 
 - **Balances** are stored as whole hundredths (2.50 KOINS = `250`), so there are no decimal rounding errors.
 - **Receive QR codes** contain a permanent random code (`KOIN:<code>`), not the username, so they keep working after a username change.
-- **Transfers** run as a single database transaction, with a password check. Coins can't be duplicated or lost.
-- **Daily earn** is one atomic database update, so it can only succeed once per day, even with double taps. The day resets at midnight in the `TZ_OFFSET_MIN` timezone.
-- **Passwords** are hashed with scrypt and never stored in plain text. Sessions are random tokens stored hashed.
+- **Transfers** run as a single database transaction with a password check.
+- **Daily earn** is one atomic database update, so it can only succeed once per day. The day resets at midnight in the `TZ_OFFSET_MIN` timezone.
+- **Passwords** are hashed with scrypt. Sessions are random tokens stored as hash.
 - **Safety limits:** repeated wrong passwords and logins are temporarily blocked. Changing your password logs out your other devices.
 
 ## API (all under `/api`)
