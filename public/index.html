@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f1117">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <title>KOIN</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" href="/icon-512.png">
+  <meta name="theme-color" content="#111111">
+  <style>
+
+:root {
+  color-scheme: dark;
+  --bg: #111111;
+  --card: #1c1c1c;
+  --input: #111111;
+  --ac: #ffe500;
+  --tx: #f5f5f0;
+  --mut: #a5a5a0;
+  --bd: #f0f0e8;
+  --red: #ff5555;
+  --shadow: 4px 4px 0 var(--ac);
+  --nav: #1c1c1c;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f2efe5;
+  --card: #fffdf5;
+  --input: #ffffff;
+  --ac: #ffe500;
+  --tx: #171717;
+  --mut: #66645e;
+  --bd: #171717;
+  --shadow: 4px 4px 0 #171717;
+  --nav: #fffdf5;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--tx);
+  font: 15px 'Poppins', system-ui, sans-serif;
+  transition: background .2s, color .2s;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+input, button {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+[data-lucide] {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+nav button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+    
+#app, #auth {
+  max-width: 480px;
+  margin: auto;
+  min-height: 100dvh;
+}
+
+#auth {
+  padding: calc(env(safe-area-inset-top, 0px) + 75px) 20px 30px;
+}
+
+.logo {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  text-align: left;
+  color: var(--ac);
+  margin: 0 0 35px;
+  text-shadow: 3px 3px 0 var(--tx);
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: var(--bg);
+  color: var(--tx);
+  border-bottom: 2px solid var(--bd);
+
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 12px)
+    18px
+    12px;
+
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+#themeToggle {
+  background: var(--ac);
+  color: #111;
+  border: 2px solid var(--bd);
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: 2px 2px 0 var(--bd);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 78px)
+    18px
+    calc(env(safe-area-inset-bottom, 0px) + 100px);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  z-index: 10;
+
+  display: flex;
+  background: var(--nav);
+  border-top: 2px solid var(--bd);
+  padding: 5px 0 env(safe-area-inset-bottom, 0px);
+}
+    
+nav button {
+  flex: 1;
+  background: none;
+  border: 0;
+  color: var(--mut);
+  padding: 9px 0 7px;
+  font-size: 11px;
+  font-weight: 700;
+  transition: .15s;
+}
+
+nav button span {
+  display: block;
+  font-size: 23px;
+  margin-bottom: 3px;
+}
+
+nav button.on {
+  color: var(--tx);
+  background: var(--ac);
+  box-shadow: inset 0 -4px 0 var(--tx);
+}
+
+.card {
+  background: var(--card);
+  border: 2px solid var(--bd);
+  border-radius: 3px;
+  padding: 17px;
+  box-shadow: var(--shadow);
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 7px 0;
+
+  border: 2px solid var(--bd);
+  border-radius: 2px;
+  background: var(--input);
+  color: var(--tx);
+
+  font-size: 15px;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--ac);
+  box-shadow: 3px 3px 0 var(--ac);
+}
+
+input::placeholder {
+  color: var(--mut);
+  opacity: 1;
+}
+
+.btn {
+  width: 100%;
+  padding: 15px;
+
+  border: 2px solid var(--bd);
+  border-radius: 2px;
+
+  background: var(--ac);
+  color: #111;
+
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .5px;
+
+  margin: 5px 0;
+  box-shadow: 3px 3px 0 var(--bd);
+
+  transition: transform .1s, box-shadow .1s;
+}
+
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+.btn.alt {
+  background: var(--card);
+  color: var(--tx);
+}
+
+.btn:disabled {
+  background: #777;
+  color: #222;
+  opacity: .65;
+  box-shadow: none;
+}
+
+.btn.opt {
+  text-align: left;
+  padding: 20px;
+  font-size: 16px;
+  background: var(--card);
+  color: var(--tx);
+  border: 2px solid var(--bd);
+  box-shadow: 4px 4px 0 var(--bd);
+  display: flex;
+  align-items: center;
+}
+
+.bal {
+  text-align: left;
+  padding: 25px 20px;
+  background: var(--ac);
+  color: #111;
+  border: 2px solid #111;
+  box-shadow: 6px 6px 0 var(--bd);
+}
+
+.bal small {
+  color: #333;
+  font-weight: 700;
+}
+
+.amt {
+  font-size: clamp(36px, 11vw, 53px);
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -2px;
+  overflow-wrap: anywhere;
+}
+
+.amt small {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #333;
+}
+
+.note {
+  text-align: center;
+  color: var(--mut);
+  font-size: 12px;
+  margin: 3px 0;
+}
+
+.err {
+  color: var(--red);
+  font-size: 13px;
+  min-height: 18px;
+  margin: 5px 0;
+  font-weight: 700;
+}
+
+.chk {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--mut);
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.chk input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ac);
+  margin: 0;
+}
+
+.back, .link {
+  background: none;
+  border: 0;
+  color: var(--mut);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 0;
+  text-align: left;
+}
+
+.back:active, .link:active {
+  color: var(--ac);
+}
+
+.link {
+  text-align: center;
+  margin-top: 4px;
+}
+
+video {
+  width: 100%;
+  border: 2px solid var(--bd);
+  border-radius: 2px;
+  background: #000;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+#qr {
+  background: white;
+  border: 2px solid #111;
+  border-radius: 2px;
+  padding: 16px;
+  display: inline-block;
+  box-shadow: 4px 4px 0 var(--ac);
+}
+
+#qr img {
+  display: block;
+  width: 240px;
+  height: 240px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 15px 5px;
+  border-bottom: 1px solid var(--bd);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+li::before {
+  content: "▪ ";
+  color: var(--ac);
+}
+
+li.note::before {
+  content: "";
+}
+
+.prof {
+  text-align: center;
+}
+
+.pfp {
+  width: 90px;
+  height: 90px;
+  border: 2px solid var(--bd);
+  border-radius: 2px;
+  background: var(--ac);
+  margin: 0 auto 15px;
+
+  display: grid;
+  place-items: center;
+
+  box-shadow: 4px 4px 0 var(--bd);
+}
+
+.pfp svg {
+  width: 48px;
+  fill: #111;
+}
+
+.prof h2 {
+  margin: 8px 0;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.pwrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--mut);
+}
+
+.ico {
+  background: none;
+  border: 0;
+  color: var(--tx);
+  font-size: 20px;
+  padding: 4px;
+}
+
+.dev {
+  margin-top: auto;
+  text-align: center;
+  color: var(--mut);
+  font-size: 12px;
+  box-shadow: none;
+}
+
+#modal {
+  position: fixed;
+  inset: 0;
+  background: #000b;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 20;
+}
+
+#modal .card {
+  width: 100%;
+  max-width: 400px;
+}
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 95px);
+  transform: translate(-50%, 20px);
+
+  background: var(--ac);
+  color: #111;
+
+  border: 2px solid #111;
+  box-shadow: 3px 3px 0 #111;
+
+  padding: 12px 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: .2s;
+  z-index: 30;
+
+  max-width: 90%;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#toast.on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (min-width: 481px) {
+  body {
+    border-left: 1px solid var(--bd);
+    border-right: 1px solid var(--bd);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+  </style>
+</head>
+<body>
+<div id="auth" hidden>
+ <h1 class="logo">KOIN</h1>
+ <div class="card">
+  <input id="u" placeholder="Username" autocapitalize="none" autocomplete="username" spellcheck="false">
+  <input id="p" type="password" placeholder="Password" autocomplete="current-password">
+  <label class="chk"><input id="rm" type="checkbox"> Remember me</label>
+  <p id="aerr" class="err"></p>
+  <button class="btn" onclick="enter('signup')">Sign up</button>
+  <button class="btn alt" onclick="enter('login')">Log in</button>
+ </div>
+</div>
+
+<div id="app" hidden>
+ <header>
+  <span>KOIN WALLET</span>
+  <button id="themeToggle" type="button">LIGHT</button>
+</header>
+ <main>
+  <section id="home" class="tab">
+   <div class="card bal"><small>Your balance</small><div class="amt"><span id="bal">0.00</span> <small>KOINS</small></div></div>
+   <button id="earn" class="btn">Earn</button>
+   <p id="note" class="note"></p>
+  </section>
+
+  <section id="transfer" class="tab" hidden>
+   <div id="t-menu">
+    <button class="btn opt" onclick="sendOpen()">
+      <i data-lucide="upload"></i>
+      <span>&nbsp Send KOINS</span>
+    </button>
+    <button class="btn opt" onclick="recvOpen()">
+      <i data-lucide="download"></i>
+      <span>&nbsp Receive KOINS</span>
+    </button>
+    <button class="btn opt" onclick="histOpen()">
+      <i data-lucide="rotate-ccw-clock"></i>
+      <span>&nbsp Transaction History</span>
+    </button>
+   </div>
+   <div id="t-send" hidden>
+    <button class="back" onclick="sub('t-menu')">
+      <i data-lucide="arrow-left"></i>
+    </button>
+    <video id="vid" playsinline muted hidden></video>
+    <div class="card" id="manual"><input id="mcode" placeholder="Or paste a KOIN code" autocapitalize="none" spellcheck="false"><button class="btn alt" id="mgo">Use code</button></div>
+    <div id="sendForm" class="card" hidden>
+     <p>Send to <b id="to"></b></p>
+     <input id="amt" inputmode="decimal" placeholder="Amount (e.g. 2.00)">
+     <input id="spw" type="password" placeholder="Your password" autocomplete="current-password">
+     <button class="btn" id="sendBtn">Send</button>
+    </div>
+   </div>
+   <div id="t-recv" hidden>
+    <button class="back" onclick="sub('t-menu')">
+      <i data-lucide="arrow-left"></i>
+    </button>
+    <div class="card" style="text-align:center"><div id="qr"></div><p id="rname"><b></b></p><p id="rcode" class="note" style="word-break:break-all;user-select:all"></p><p class="note">Let the sender scan this code</p></div>
+   </div>
+   <div id="t-hist" hidden>
+    <button class="back" onclick="sub('t-menu')">
+      <i data-lucide="arrow-left"></i>
+    </button>
+    <ul id="hist"></ul>
+   </div>
+  </section>
+
+  <section id="prof" class="tab" hidden>
+   <div class="card prof">
+    <div class="pfp"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg></div>
+    <h2 id="uname"></h2>
+    <div class="pwrow"><span id="pwv">*******</span><button id="eye" class="ico" aria-label="Show password">
+      <i data-lucide="eye"></i>
+    </button></div>
+   </div>
+   <button class="btn alt" id="chU">Change username</button>
+   <button class="btn alt" id="chP">Change password</button>
+   <button class="link" id="lo">Log out</button>
+   <div class="card dev"><b>KOIN</b> · v<span id="ver"></span><br>Developed by <span id="dev"></span></div>
+  </section>
+ </main>
+ <nav>
+  <button data-t="home" class="on">
+    <i data-lucide="house"></i>
+  </button>
+  <button data-t="transfer">
+    <i data-lucide="arrow-left-right"></i>
+  </button>
+  <button data-t="prof">
+    <i data-lucide="user-round"></i>
+  </button>
+ </nav>
+</div>
+
+<div id="modal" hidden><div class="card"><h3 id="mt" style="margin-top:0"></h3><div id="mf"></div><p id="merr" class="err"></p>
+ <button class="btn" id="ok">Save</button><button class="btn alt" onclick="$('#modal').hidden=true">Cancel</button></div></div>
+<div id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const savedTheme = localStorage.getItem('koin-theme') || 'dark';
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem('koin-theme', theme);
+
+  const btn = $('#themeToggle');
+
+  if (btn) {
+    btn.textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
+    btn.setAttribute(
+      'aria-label',
+      'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' mode'
+    );
+  }
+}
+
+setTheme(savedTheme);
+
+$('#themeToggle').onclick = () => {
+  setTheme(
+    document.documentElement.dataset.theme === 'dark'
+      ? 'light'
+      : 'dark'
+  );
+};
+
+const fmt = c => (c / 100).toFixed(2);
+const VER = '2.0.0';
+const DEV = 'KrazxRen';
+let tok = localStorage.tok || sessionStorage.tok || null;
+let S = null;
+let pw = null;
+let showPw = false;
+let stream = null;
+let scanning = false;
+let to = null;
+let tt;
+
+function toast(m) {
+  const t = $('#toast');
+  t.textContent = m;
+  t.classList.add('on');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('on'), 2800);
+}
+
+async function api(p, b) {
+  const r = await fetch('/api/' + p, {
+    method: b ? 'POST' : 'GET',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok },
+    body: b ? JSON.stringify(b) : undefined
+  });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401 && tok) {
+    out();
+    throw Error('Session expired, please log in');
+  }
+  if (!r.ok) throw Error(d.error || 'Something went wrong');
+  return d;
+}
+  
+function renderIcons() {
+  lucide.createIcons();
+}
+
+renderIcons();
+// ---- Login / logout ----
+async function enter(kind) {
+  try {
+    const u = $('#u').value.trim();
+    const p = $('#p').value;
+    const rm = $('#rm').checked;
+    const d = await api(kind, { username: u, password: p, remember: rm });
+    tok = d.token;
+    (rm ? localStorage : sessionStorage).tok = tok;
+    pw = p;
+    $('#aerr').textContent = '';
+    await boot();
+  } catch (e) {
+    $('#aerr').textContent = e.message;
+  }
+}
+
+function out(srv) {
+  if (srv && tok) {
+    fetch('/api/logout', { method: 'POST', headers: { Authorization: 'Bearer ' + tok } }).catch(() => {});
+  }
+  localStorage.removeItem('tok');
+  sessionStorage.removeItem('tok');
+  tok = S = pw = null;
+  showPw = false;
+  stopScan();
+  $('#app').hidden = true;
+  $('#auth').hidden = false;
+  $('#p').value = '';
+}
+
+async function boot() {
+  await refresh();
+  $('#auth').hidden = true;
+  $('#app').hidden = false;
+  $('#ver').textContent = VER;
+  $('#dev').textContent = DEV;
+  tab('home');
+}
+
+async function refresh() {
+  S = await api('me');
+  render();
+}
+
+function render() {
+  $('#bal').textContent = fmt(S.balance);
+  $('#earn').disabled = S.earned;
+  $('#note').textContent = S.earned ? 'Already earned today, come back tomorrow' : 'Earn KOINS once every day';
+  $('#uname').textContent = '@' + S.username;
+  $('#pwv').textContent = showPw && pw !== null ? pw : '*******';
+}
+
+// ---- Navigation ----
+function tab(n) {
+  $$('.tab').forEach(e => {
+    e.hidden = e.id !== n;
+  });
+  $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === n));
+  if (n === 'transfer') sub('t-menu');
+  else stopScan();
+  refresh().catch(() => {});
+}
+
+$$('nav button').forEach(b => {
+  b.onclick = () => tab(b.dataset.t);
+});
+
+function sub(id) {
+  stopScan();
+  $('#manual').hidden = false;
+  ['t-menu', 't-send', 't-recv', 't-hist'].forEach(x => {
+    $('#' + x).hidden = x !== id;
+  });
+  $('#sendForm').hidden = true;
+}
+
+// ---- Earn ----
+$('#earn').onclick = async () => {
+  try {
+    const d = await api('earn', {});
+    toast('+' + fmt(d.reward) + ' KOINS earned!');
+  } catch (e) {
+    toast(e.message);
+  }
+  refresh().catch(() => {});
+};
+
+// ---- Send (scan) ----
+function sendOpen() {
+  sub('t-send');
+  startScan();
+}
+
+async function startScan() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    });
+    const v = $('#vid');
+    v.hidden = false;
+    v.srcObject = stream;
+    await v.play();
+    scanning = true;
+    loop(v);
+  } catch (e) {
+    stopScan();
+    toast(e.name === 'NotAllowedError' ? 'Allow camera access in your browser settings' : 'Camera problem: ' + (e.message || e.name));
+  }
+}
+
+function stopScan() {
+  scanning = false;
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  stream = null;
+  $('#vid').hidden = true;
+}
+
+function loop(v) {
+  let bd = null;
+  try {
+    if ('BarcodeDetector' in window) bd = new BarcodeDetector({ formats: ['qr_code'] });
+  } catch {}
+  const c = document.createElement('canvas');
+  const x = c.getContext('2d', { willReadFrequently: true });
+  let n = 0;
+  let busy = false;
+  let warned = false;
+  if (!bd && !window.jsQR) toast('Scanner still loading. Try again, or paste the code below');
+
+  (async function t() {
+    if (!scanning) return;
+    if (v.videoWidth && !busy && ++n % 2 === 0) {
+      busy = true;
+      let data = null;
+      try {
+        if (bd) {
+          const r = await bd.detect(v);
+          if (r.length) data = r[0].rawValue;
+        } else if (window.jsQR) {
+          const s = Math.min(1, 960 / v.videoWidth);
+          c.width = v.videoWidth * s;
+          c.height = v.videoHeight * s;
+          x.drawImage(v, 0, 0, c.width, c.height);
+          const k = jsQR(x.getImageData(0, 0, c.width, c.height).data, c.width, c.height, { inversionAttempts: 'dontInvert' });
+          if (k) data = k.data;
+        }
+      } catch {}
+      busy = false;
+      if (data && data.startsWith('KOIN:')) {
+        found(data.slice(5));
+        return;
+      }
+      if (data && !warned) {
+        warned = true;
+        toast('That is not a KOIN code');
+      }
+    }
+    requestAnimationFrame(t);
+  })();
+}
+
+async function found(pid) {
+  stopScan();
+  try {
+    const d = await api('lookup?pid=' + encodeURIComponent(pid));
+    to = pid;
+    $('#to').textContent = '@' + d.username;
+    $('#sendForm').hidden = false;
+  } catch (e) {
+    toast(e.message);
+    startScan();
+  }
+}
+
+$('#sendBtn').onclick = async () => {
+  try {
+    const a = $('#amt').value.trim().replace(',', '.');
+    await api('send', { pid: to, amount: a, password: $('#spw').value });
+    toast('Sent ' + (+a).toFixed(2) + ' KOINS to ' + $('#to').textContent);
+    $('#amt').value = '';
+    $('#spw').value = '';
+    sub('t-menu');
+    refresh().catch(() => {});
+  } catch (e) {
+    toast(e.message);
+  }
+};
+
+$('#mgo').onclick = () => {
+  const v = $('#mcode').value.trim().replace(/^KOIN:/i, '');
+  if (v) {
+    $('#manual').hidden = true;
+    found(v);
+  }
+};
+
+// ---- Receive ----
+function recvOpen() {
+  if (!window.qrcode) return toast('Still loading, try again in a moment');
+  sub('t-recv');
+  const q = qrcode(0, 'M');
+  q.addData('KOIN:' + S.pid);
+  q.make();
+  $('#qr').innerHTML = q.createImgTag(8, 4);
+  $('#rname').textContent = '@' + S.username;
+  $('#rcode').textContent = 'KOIN:' + S.pid;
+}
+
+// ---- History ----
+async function histOpen() {
+  sub('t-hist');
+  const ul = $('#hist');
+  ul.innerHTML = '';
+  try {
+    const l = await api('history');
+    if (!l.length) ul.innerHTML = '<li class="note">No transactions yet</li>';
+    const z = n => String(n).padStart(2, '0');
+    l.forEach(x => {
+      const d = new Date(x.at);
+      const li = document.createElement('li');
+      const date = `[${z(d.getDate())}-${z(d.getMonth() + 1)}-${d.getFullYear()}]`;
+      const time = `(${z(d.getHours())}:${z(d.getMinutes())})`;
+      const verb = x.sent ? 'sent' : 'received';
+      const prep = x.sent ? 'to' : 'from';
+      li.textContent = `${date} ${time} : ${verb} ${fmt(x.amount)} KOINS ${prep} @${x.who}`;
+      ul.append(li);
+    });
+  } catch (e) {
+    toast(e.message);
+  }
+}
+
+// ---- Me ----
+$('#eye').onclick = () => {
+  if (pw === null) return toast('For security, your password can only be shown right after you log in');
+  showPw = !showPw;
+  render();
+};
+
+function ask(title, fields, go) {
+  $('#mt').textContent = title;
+  $('#mf').innerHTML = '';
+  $('#merr').textContent = '';
+  fields.forEach(([ph, type]) => {
+    const i = document.createElement('input');
+    i.placeholder = ph;
+    i.type = type || 'text';
+    i.autocomplete = 'off';
+    i.autocapitalize = 'none';
+    $('#mf').append(i);
+  });
+  $('#modal').hidden = false;
+  $('#ok').onclick = async () => {
+    try {
+      await go([...$('#mf').children].map(i => i.value));
+      $('#modal').hidden = true;
+    } catch (e) {
+      $('#merr').textContent = e.message;
+    }
+  };
+}
+
+$('#chU').onclick = () => ask('Change username', [['New username'], ['Current password', 'password']], async ([n, p]) => {
+  await api('username', { username: n.trim(), password: p });
+  await refresh();
+  toast('Username changed');
+});
+
+$('#chP').onclick = () => ask('Change password', [['Current password', 'password'], ['New password', 'password']], async ([o, n]) => {
+  await api('password', { password: o, newPassword: n });
+  pw = n;
+  render();
+  toast('Password changed');
+});
+
+$('#lo').onclick = () => out(true);
+
+// ---- Start ----
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+if (tok) {
+  boot().catch(() => {
+    $('#auth').hidden = false;
+  });
+} else {
+  $('#auth').hidden = false;
+}
+  
+</script>
+</body>
+</html>
